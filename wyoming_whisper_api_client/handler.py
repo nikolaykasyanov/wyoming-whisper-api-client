@@ -60,12 +60,14 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
                         wavfile.writeframes(self.audio)
 
-                        files: dict = {
-                            "file": tmpfile.getvalue(),
-                        }
+                        data = {}
 
                         if self.language:
-                            files["language"] = self.language
+                            data["language"] = self.language
+
+                        files = {
+                            "file": tmpfile.getvalue(),
+                        }
 
                         params = {
                             "temperature": "0.0",
@@ -76,7 +78,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         if self.cli_args.model:
                             params["model"] = self.cli_args.model
 
-                        r = await client.post(self.cli_args.api, files=files, params=params, timeout=120.0)
+                        r = await client.post(self.cli_args.api, files=files, data=data, params=params, timeout=120.0)
                         #_LOGGER.debug(r.json())
                         text = r.json()['text']
 
