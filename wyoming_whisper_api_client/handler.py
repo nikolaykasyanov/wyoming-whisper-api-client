@@ -30,6 +30,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
         self.cli_args = cli_args
         self.wyoming_info_event = wyoming_info.event()
         self.audio = bytes()
+        self.language = None
         self.audio_converter = AudioChunkConverter(
             rate=16000,
             width=2,
