@@ -66,7 +66,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                             data["language"] = self.language
 
                         files = {
-                            "file": tmpfile.getvalue(),
+                            "file": tmpfile.getvalue()
                         }
 
                         params = {
