@@ -37,6 +37,10 @@ class WhisperAPIEventHandler(AsyncEventHandler):
         )
 
     async def handle_event(self, event: Event) -> bool:
+        if Transcribe.is_type(event.type):
+            request = Transcribe.from_event(event)
+            self.language = request.language
+
         if AudioChunk.is_type(event.type):
             if not self.audio:
                 _LOGGER.debug("Receiving audio")
@@ -55,8 +59,11 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
                         wavfile.writeframes(self.audio)
 
+                        assert self.language
+
                         files = {
-                            "file": tmpfile.getvalue()
+                            "file": tmpfile.getvalue(),
+                            "language": self.language,
                         }
                         params = {
                             "temperature": "0.0",
@@ -78,6 +85,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
 
             # Reset
             self.audio = bytes()
+            self.language = None
 
             return False
 
