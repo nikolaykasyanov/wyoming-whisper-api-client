@@ -59,6 +59,7 @@ class WhisperAPIEventHandler(AsyncEventHandler):
                         wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
                         wavfile.writeframes(self.audio)
 
+                        # A Transcribe event must always precede AudioStop, meaning the language should've been set by now.
                         assert self.language
 
                         files = {
